@@ -39,6 +39,8 @@ pip install pywin32
 * settings.ini - файл с настройками приложения
 
 5. Создать файлы для работы с gRPC (на языке Python).
+> Этот шаг можно пропутить, т.к. файлы для Python уже приложены к примеру.
+
 В каталоге с приложением выполнить в командной строке:
 
 `>python -m grpc_tools.protoc --python_out=%CD% --grpc_python_out=%CD% --pyi_out=%CD% --proto_path=%CD% *.proto`
