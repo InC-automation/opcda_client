@@ -1,0 +1,37 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+# add other common virtual env names as needed
+
+# Distribution / packaging
+.Python
+build/
+.build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment files
+.env
+.flaskenv
+
+# Editor files and OS specific files (optional, can also be in a global gitignore)
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
