@@ -169,9 +169,9 @@ class grpc_exchange:
                 if signal.quality != quality_dict['DEVICE_FAILURE']:
                     signal.quality = quality_dict['DEVICE_FAILURE']
                     signal.time = self.get_timestamp()
-                    self.sig_values[signal.guid] = Signal
+                    self.sig_values[signal.guid] = signal
                     try:
-                        self.stub.SetSignal(Signal)
+                        self.stub.SetSignal(signal)
                     except grpc.RpcError as e:
                         print(f'{datetime.now().time()} gRPC error: {e.code()}, {e.details()}')
                         self.grcp_close(5)   # закрыть соединение, если ошибка
