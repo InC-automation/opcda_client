@@ -41,15 +41,14 @@ pip install pywin32
 * settings.ini - файл с настройками приложения
 
 5. Создать файлы для работы с gRPC (на языке Python).
-> Этот шаг можно пропутить, т.к. файлы для Python уже приложены к примеру.
+> Этот шаг можно пропустить, т.к. файлы для Python уже приложены к примеру.
 
 В каталоге с приложением выполнить в командной строке:
 
-`>python -m grpc_tools.protoc --python_out=%CD% --grpc_python_out=%CD% --pyi_out=%CD% --proto_path=%CD% *.proto`
+`>python -m grpc_tools.protoc --python_out=%CD% --grpc_python_out=%CD% --proto_path=%CD% *.proto`
 
 Должны появиться файлы
 * elecont_pb2.py
-* elecont_pb2.pyi
 * elecont_pb2_grpc.py
 
 6. Для тестирования установить сервер Matrikon OPC DA Server (или другой).
@@ -63,8 +62,8 @@ pip install pywin32
 ------------------------|------------------------
 ELECONT_GRPC = localhost:29041 | подключение к КС
 OPCDA_SERVER = Matrikon.OPC.Simulation.1 | имя сервера OPC DA
-CYCLE_PERIOD = 1000 | период цикла обмена данными
-CONNECT_PERIOD = 5000 | период подключения к серверам КС и OPC DA
+CYCLE_PERIOD = 1000 | период цикла обмена данными (мс)
+CONNECT_PERIOD = 5000 | период подключения к серверам КС и OPC DA (мс)
 SYNC_MODE = 0 | режим чтения данных OPC DA (0 - асинхронный, 1 - синхронный)
 TAGS_LIMIT = 1000	| количество тэгов OPC DA, которое может быть запрошено за 1 раз
 TRACE = 0	| режим логирования (0 - ограниченный, 1 - расширенный)
