@@ -1,0 +1,3384 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#elecont.proto">elecont.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#elecont.BitString13Signal"><span class="badge">M</span>BitString13Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.BitString2Signal"><span class="badge">M</span>BitString2Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.BitString32Signal"><span class="badge">M</span>BitString32Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Bitfield2Command"><span class="badge">M</span>Bitfield2Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.BooleanCommand"><span class="badge">M</span>BooleanCommand</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.BooleanSignal"><span class="badge">M</span>BooleanSignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CodedEnumSignal"><span class="badge">M</span>CodedEnumSignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Command"><span class="badge">M</span>Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CommandPool"><span class="badge">M</span>CommandPool</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CommandProperties"><span class="badge">M</span>CommandProperties</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CommandService"><span class="badge">M</span>CommandService</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CommandState"><span class="badge">M</span>CommandState</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Commands"><span class="badge">M</span>Commands</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ElecontSignalType"><span class="badge">M</span>ElecontSignalType</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Empty"><span class="badge">M</span>Empty</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.EnumeratedSignal"><span class="badge">M</span>EnumeratedSignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Float32Command"><span class="badge">M</span>Float32Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Float32Signal"><span class="badge">M</span>Float32Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Float64Command"><span class="badge">M</span>Float64Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Float64Signal"><span class="badge">M</span>Float64Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Guid"><span class="badge">M</span>Guid</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int128Signal"><span class="badge">M</span>Int128Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int16Command"><span class="badge">M</span>Int16Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int16Signal"><span class="badge">M</span>Int16Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int16UCommand"><span class="badge">M</span>Int16UCommand</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int16USignal"><span class="badge">M</span>Int16USignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int32Command"><span class="badge">M</span>Int32Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int32Signal"><span class="badge">M</span>Int32Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int32UCommand"><span class="badge">M</span>Int32UCommand</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int32USignal"><span class="badge">M</span>Int32USignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int64Command"><span class="badge">M</span>Int64Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int64Signal"><span class="badge">M</span>Int64Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int64UCommand"><span class="badge">M</span>Int64UCommand</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int64USignal"><span class="badge">M</span>Int64USignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int8Command"><span class="badge">M</span>Int8Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int8Signal"><span class="badge">M</span>Int8Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int8UCommand"><span class="badge">M</span>Int8UCommand</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Int8USignal"><span class="badge">M</span>Int8USignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ObjectData"><span class="badge">M</span>ObjectData</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ObjectFamily"><span class="badge">M</span>ObjectFamily</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Objects"><span class="badge">M</span>Objects</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.OctetString64Signal"><span class="badge">M</span>OctetString64Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.OctetString6Signal"><span class="badge">M</span>OctetString6Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.OctetString8Signal"><span class="badge">M</span>OctetString8Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Report"><span class="badge">M</span>Report</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ReportId"><span class="badge">M</span>ReportId</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Result"><span class="badge">M</span>Result</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Signal"><span class="badge">M</span>Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.SignalPool"><span class="badge">M</span>SignalPool</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.SignalProperties"><span class="badge">M</span>SignalProperties</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Signals"><span class="badge">M</span>Signals</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.SignalsGuid"><span class="badge">M</span>SignalsGuid</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.SignalsId"><span class="badge">M</span>SignalsId</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.State"><span class="badge">M</span>State</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.UnicodeStringSignal"><span class="badge">M</span>UnicodeStringSignal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.VisibleString255Command"><span class="badge">M</span>VisibleString255Command</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.VisibleString255Signal"><span class="badge">M</span>VisibleString255Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.VisibleString32Signal"><span class="badge">M</span>VisibleString32Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.VisibleString64Signal"><span class="badge">M</span>VisibleString64Signal</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.VisibleString65Signal"><span class="badge">M</span>VisibleString65Signal</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#elecont.CommandService.Value"><span class="badge">E</span>CommandService.Value</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.CommandState.Value"><span class="badge">E</span>CommandState.Value</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ElecontSignalType.Value"><span class="badge">E</span>ElecontSignalType.Value</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.ObjectFamily.Value"><span class="badge">E</span>ObjectFamily.Value</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.Result.Value"><span class="badge">E</span>Result.Value</a>
+                </li>
+              
+                <li>
+                  <a href="#elecont.State.Value"><span class="badge">E</span>State.Value</a>
+                </li>
+              
+              
+              
+                <li>
+                  <a href="#elecont.Elecont"><span class="badge">S</span>Elecont</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="elecont.proto">elecont.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="elecont.BitString13Signal">BitString13Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: битовая строка (последовательность из 1 и 0) из тринадцати элементов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.BitString2Signal">BitString2Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: битовая строка (последовательность из 1 и 0) из двух элементов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.BitString32Signal">BitString32Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: битовая строка (последовательность из 1 и 0) из тридцати двух элементов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Bitfield2Command">Bitfield2Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: двухэлементный bitfield</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.BooleanCommand">BooleanCommand</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: boolean</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.BooleanSignal">BooleanSignal</h3>
+        <p>Сообщение, определяющее сигнал типа: boolean.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.CodedEnumSignal">CodedEnumSignal</h3>
+        <p>Сообщение, определяющее сигнал типа: кодированное перечисление</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Command">Command</h3>
+        <p>Сообщение, определяющее команду. Облегчённое представление. Используется в потоке.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковой guid для идентификации объекта в конфигурации </p></td>
+                </tr>
+              
+                <tr>
+                  <td>time</td>
+                  <td><a href="#fixed64">fixed64</a></td>
+                  <td></td>
+                  <td><p>Метка времени </p></td>
+                </tr>
+              
+                <tr>
+                  <td>type</td>
+                  <td><a href="#elecont.ElecontSignalType">ElecontSignalType</a></td>
+                  <td></td>
+                  <td><p>Тип значения </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковое представление значения </p></td>
+                </tr>
+              
+                <tr>
+                  <td>state</td>
+                  <td><a href="#elecont.CommandState">CommandState</a></td>
+                  <td></td>
+                  <td><p>Состояние команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>service</td>
+                  <td><a href="#elecont.CommandService">CommandService</a></td>
+                  <td></td>
+                  <td><p>Выполняемая операция </p></td>
+                </tr>
+              
+                <tr>
+                  <td>source_id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Идентификатор источника </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.CommandPool">CommandPool</h3>
+        <p>Сообщение, определяющее пул команд. Универсальное хранилище, содержащее массивы для всех типов команд.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>boolean_command</td>
+                  <td><a href="#elecont.BooleanCommand">BooleanCommand</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: boolean </p></td>
+                </tr>
+              
+                <tr>
+                  <td>bitfield2_command</td>
+                  <td><a href="#elecont.Bitfield2Command">Bitfield2Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: двухэлементный bitfield </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int8_command</td>
+                  <td><a href="#elecont.Int8Command">Int8Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: int8 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int8u_command</td>
+                  <td><a href="#elecont.Int8UCommand">Int8UCommand</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: uint8 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int16_command</td>
+                  <td><a href="#elecont.Int16Command">Int16Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: int16 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int16u_command</td>
+                  <td><a href="#elecont.Int16UCommand">Int16UCommand</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: uint16 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int32_command</td>
+                  <td><a href="#elecont.Int32Command">Int32Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: int32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int32u_command</td>
+                  <td><a href="#elecont.Int32UCommand">Int32UCommand</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: uint32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int64_command</td>
+                  <td><a href="#elecont.Int64Command">Int64Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: int64 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int64u_command</td>
+                  <td><a href="#elecont.Int64UCommand">Int64UCommand</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: uint64 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>float32_command</td>
+                  <td><a href="#elecont.Float32Command">Float32Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: float32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>float64_command</td>
+                  <td><a href="#elecont.Float64Command">Float64Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: float64 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>visible_string255_command</td>
+                  <td><a href="#elecont.VisibleString255Command">VisibleString255Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд с передаваемым значением типа: строка из 255 символов </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.CommandProperties">CommandProperties</h3>
+        <p>Сообщение, определяющее свойства команды</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Целочисленный идентификатор для оперирования объектом в ядре КС </p></td>
+                </tr>
+              
+                <tr>
+                  <td>time</td>
+                  <td><a href="#fixed64">fixed64</a></td>
+                  <td></td>
+                  <td><p>Метка времени </p></td>
+                </tr>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковой guid для идентификации объекта в конфигурации </p></td>
+                </tr>
+              
+                <tr>
+                  <td>state</td>
+                  <td><a href="#elecont.CommandState">CommandState</a></td>
+                  <td></td>
+                  <td><p>Состояние команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>service</td>
+                  <td><a href="#elecont.CommandService">CommandService</a></td>
+                  <td></td>
+                  <td><p>Выполняемая операция </p></td>
+                </tr>
+              
+                <tr>
+                  <td>source_id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Идентификатор источника </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.CommandService">CommandService</h3>
+        <p>Сообщение, определяющее операцию, выполняемую командой.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.CommandService.Value">CommandService.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.CommandState">CommandState</h3>
+        <p>Сообщение, определяющее состояние команды.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.CommandState.Value">CommandState.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Commands">Commands</h3>
+        <p>Сообщение, определяющее список команд. Облегчённое представление пула</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>command</td>
+                  <td><a href="#elecont.Command">Command</a></td>
+                  <td>repeated</td>
+                  <td><p>Список команд </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.ElecontSignalType">ElecontSignalType</h3>
+        <p>Сообщение, определяющее тип значения сигнала. Это сообщение применимо и для команд</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.ElecontSignalType.Value">ElecontSignalType.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Empty">Empty</h3>
+        <p>Определение пустого сообщения</p>
+
+        
+
+        
+      
+        <h3 id="elecont.EnumeratedSignal">EnumeratedSignal</h3>
+        <p>Сообщение, определяющее сигнал типа: перечисление</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Float32Command">Float32Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: float32</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#float">float</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Float32Signal">Float32Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: float32</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#float">float</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Float64Command">Float64Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: float64</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#double">double</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Float64Signal">Float64Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: float64</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#double">double</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Guid">Guid</h3>
+        <p>Сообщение, определяющее GUID объекта.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковое представление GUID в формате с дефисами: 01234567-89ab-cdef-0123-456789abcdef </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int128Signal">Int128Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: int128</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value_high</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Верхняя часть значения сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value_low</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Нижняя часть значения сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int16Command">Int16Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: int16</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int16Signal">Int16Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: int16.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int16UCommand">Int16UCommand</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: uint16</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int16USignal">Int16USignal</h3>
+        <p>Сообщение, определяющее сигнал типа: uint16</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int32Command">Int32Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: int32</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int32Signal">Int32Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: int32.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int32UCommand">Int32UCommand</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: uint8</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int32USignal">Int32USignal</h3>
+        <p>Сообщение, определяющее сигнал типа: uint32</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int64Command">Int64Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: int64</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int64Signal">Int64Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: int64.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int64UCommand">Int64UCommand</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: uint64</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int64USignal">Int64USignal</h3>
+        <p>Сообщение, определяющее сигнал типа: uint64</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int8Command">Int8Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: int8</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int8Signal">Int8Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: int8.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int8UCommand">Int8UCommand</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: uint8</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Int8USignal">Int8USignal</h3>
+        <p>Сообщение, определяющее сигнал типа: uint8</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.ObjectData">ObjectData</h3>
+        <p>Сообщение с данными объекта коммуникационного сервера.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>family</td>
+                  <td><a href="#elecont.ObjectFamily">ObjectFamily</a></td>
+                  <td></td>
+                  <td><p>Семейство объекта </p></td>
+                </tr>
+              
+                <tr>
+                  <td>type</td>
+                  <td><a href="#elecont.ElecontSignalType">ElecontSignalType</a></td>
+                  <td></td>
+                  <td><p>Тип значения </p></td>
+                </tr>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковой guid для идентификации объекта в конфигурации </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userdata</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Пользовательские данные </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.ObjectFamily">ObjectFamily</h3>
+        <p>Сообщение, определяющее семейство объекта коммуникационного сервера.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.ObjectFamily.Value">ObjectFamily.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Objects">Objects</h3>
+        <p>Сообщение - список объектов коммуникационного сервера.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>data</td>
+                  <td><a href="#elecont.ObjectData">ObjectData</a></td>
+                  <td>repeated</td>
+                  <td><p>Список данных объектов </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.OctetString64Signal">OctetString64Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: 64 последовательных байт (октетов)</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.OctetString6Signal">OctetString6Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: 6 последовательных байт (октетов)</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.OctetString8Signal">OctetString8Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: 8 последовательных байт (октетов)</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Report">Report</h3>
+        <p>Сообщение, определяющее отчёт (подписку)</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#elecont.ReportId">ReportId</a></td>
+                  <td></td>
+                  <td><p>Идентификатор отчёта </p></td>
+                </tr>
+              
+                <tr>
+                  <td>sig_ids</td>
+                  <td><a href="#elecont.SignalsId">SignalsId</a></td>
+                  <td></td>
+                  <td><p>Целочисленные идентификаторы сигналов, входящие в отчёт </p></td>
+                </tr>
+              
+                <tr>
+                  <td>sig_guids</td>
+                  <td><a href="#elecont.SignalsGuid">SignalsGuid</a></td>
+                  <td></td>
+                  <td><p>GUID сигналов, входящие в отчёт </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.ReportId">ReportId</h3>
+        <p>Сообщение, определяющее идентификатор отчёта. В привычных терминах это можно назвать идентификатором подписки</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Целочисленный идентификатор отчёта </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Result">Result</h3>
+        <p>Сообщение, определяющее результат выполнения какого-либо операции</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.Result.Value">Result.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Signal">Signal</h3>
+        <p>Сообщение, определяющее сигнал. Облегчённое представление. Используется в потоке</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковой guid для идентификации объекта в конфигурации </p></td>
+                </tr>
+              
+                <tr>
+                  <td>quality</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Целочисленное представление качества </p></td>
+                </tr>
+              
+                <tr>
+                  <td>time</td>
+                  <td><a href="#fixed64">fixed64</a></td>
+                  <td></td>
+                  <td><p>Метка времени </p></td>
+                </tr>
+              
+                <tr>
+                  <td>type</td>
+                  <td><a href="#elecont.ElecontSignalType">ElecontSignalType</a></td>
+                  <td></td>
+                  <td><p>Тип значения </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>str_quality</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Качество сигнала в виде понятного описания </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.SignalPool">SignalPool</h3>
+        <p>Сообщение, определяющее пул сигналов. Универсальное хранилище, содержащее списки всех типов сигналов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>undefined_signal</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td>repeated</td>
+                  <td><p>Признек неопределённости </p></td>
+                </tr>
+              
+                <tr>
+                  <td>boolean_signal</td>
+                  <td><a href="#elecont.BooleanSignal">BooleanSignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: boolean </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int8_signal</td>
+                  <td><a href="#elecont.Int8Signal">Int8Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: int8 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int16_signal</td>
+                  <td><a href="#elecont.Int16Signal">Int16Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: int16 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int32_signal</td>
+                  <td><a href="#elecont.Int32Signal">Int32Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: int32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int128_signal</td>
+                  <td><a href="#elecont.Int128Signal">Int128Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: int128 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int8u_signal</td>
+                  <td><a href="#elecont.Int8USignal">Int8USignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: uint8 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int16u_signal</td>
+                  <td><a href="#elecont.Int16USignal">Int16USignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: uint16 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int32u_signal</td>
+                  <td><a href="#elecont.Int32USignal">Int32USignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: uint32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>float32_signal</td>
+                  <td><a href="#elecont.Float32Signal">Float32Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: float32 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>float64_signal</td>
+                  <td><a href="#elecont.Float64Signal">Float64Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: float64 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>enumerated_signal</td>
+                  <td><a href="#elecont.EnumeratedSignal">EnumeratedSignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: перечисление </p></td>
+                </tr>
+              
+                <tr>
+                  <td>coded_enum_signal</td>
+                  <td><a href="#elecont.CodedEnumSignal">CodedEnumSignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: кодированное перечисление </p></td>
+                </tr>
+              
+                <tr>
+                  <td>octet_string6_signal</td>
+                  <td><a href="#elecont.OctetString6Signal">OctetString6Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: 6 последовательных байт (октетов) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>octet_string8_signal</td>
+                  <td><a href="#elecont.OctetString8Signal">OctetString8Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: 8 последовательных байт (октетов) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>octet_string64_signal</td>
+                  <td><a href="#elecont.OctetString64Signal">OctetString64Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: 64 последовательных байт (октетов) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>visible_string32_signal</td>
+                  <td><a href="#elecont.VisibleString32Signal">VisibleString32Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: строка из 32 символов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>visible_string64_signal</td>
+                  <td><a href="#elecont.VisibleString64Signal">VisibleString64Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: строка из 64 символов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>visible_string65_signal</td>
+                  <td><a href="#elecont.VisibleString65Signal">VisibleString65Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: строка из 65 символов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>visible_string255_signal</td>
+                  <td><a href="#elecont.VisibleString255Signal">VisibleString255Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: строка из 255 символов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>unicode_string_signal</td>
+                  <td><a href="#elecont.UnicodeStringSignal">UnicodeStringSignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: Unicode строка </p></td>
+                </tr>
+              
+                <tr>
+                  <td>bit_string2_signal</td>
+                  <td><a href="#elecont.BitString2Signal">BitString2Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: битовая строка (последовательность из 1 и 0) из двух элементов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>bit_string13_signal</td>
+                  <td><a href="#elecont.BitString13Signal">BitString13Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: битовая строка (последовательность из 1 и 0) из тринадцати элементов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>bit_string32_signal</td>
+                  <td><a href="#elecont.BitString32Signal">BitString32Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа: битовая строка (последовательность из 1 и 0) из тридцати двух элементов </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int64u_signal</td>
+                  <td><a href="#elecont.Int64USignal">Int64USignal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа uint64 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>int64_signal</td>
+                  <td><a href="#elecont.Int64Signal">Int64Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов типа int64 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.SignalProperties">SignalProperties</h3>
+        <p>@brief SignalProperties</p><p>Сообщение, определяющее свойства сигнала.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Целочисленный идентификатор для оперирования объектом в ядре КС </p></td>
+                </tr>
+              
+                <tr>
+                  <td>quality</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Приведённое качество </p></td>
+                </tr>
+              
+                <tr>
+                  <td>raw_quality</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Сырое качество </p></td>
+                </tr>
+              
+                <tr>
+                  <td>source_id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>Идентификатор источника </p></td>
+                </tr>
+              
+                <tr>
+                  <td>time</td>
+                  <td><a href="#fixed64">fixed64</a></td>
+                  <td></td>
+                  <td><p>Метка времени </p></td>
+                </tr>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Строковой guid для идентификации объекта в конфигурации </p></td>
+                </tr>
+              
+                <tr>
+                  <td>str_quality</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Качество сигнала в виде понятного описания </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.Signals">Signals</h3>
+        <p>Сообщение, определяющее список сигналов. Облегчённое представление пула</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>signal</td>
+                  <td><a href="#elecont.Signal">Signal</a></td>
+                  <td>repeated</td>
+                  <td><p>Список сигналов </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.SignalsGuid">SignalsGuid</h3>
+        <p>Сообщение, определяющее список GUID сигналов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>guid</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>Список GUID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.SignalsId">SignalsId</h3>
+        <p>Сообщение, определяющее список целочисленных идентификаторов сигналов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td>repeated</td>
+                  <td><p>Список идентификаторов </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.State">State</h3>
+        <p>Сообщение, определяющее состояние сервиса</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#elecont.State.Value">State.Value</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.UnicodeStringSignal">UnicodeStringSignal</h3>
+        <p>Сообщение, определяющее сигнал типа: Unicode строка</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.VisibleString255Command">VisibleString255Command</h3>
+        <p>Сообщение, определяющее команду с передаваемым значением типа: строка из 255 символов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>cmdprop</td>
+                  <td><a href="#elecont.CommandProperties">CommandProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства команды </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Передаваемое значение </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.VisibleString255Signal">VisibleString255Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: строка из 255 символов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.VisibleString32Signal">VisibleString32Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: строка из 32 символов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.VisibleString64Signal">VisibleString64Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: строка из 64 символов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="elecont.VisibleString65Signal">VisibleString65Signal</h3>
+        <p>Сообщение, определяющее сигнал типа: строка из 65 символов</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sigprop</td>
+                  <td><a href="#elecont.SignalProperties">SignalProperties</a></td>
+                  <td></td>
+                  <td><p>Свойства сигнала </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>Значение сигнала </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+        <h3 id="elecont.CommandService.Value">CommandService.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>SELECT</td>
+                <td>0</td>
+                <td><p>Выбор</p></td>
+              </tr>
+            
+              <tr>
+                <td>SELECT_WITH_VAL</td>
+                <td>1</td>
+                <td><p>Выбор со значением</p></td>
+              </tr>
+            
+              <tr>
+                <td>CANCEL</td>
+                <td>2</td>
+                <td><p>Отмена</p></td>
+              </tr>
+            
+              <tr>
+                <td>OPERATE</td>
+                <td>3</td>
+                <td><p>Воздействие</p></td>
+              </tr>
+            
+              <tr>
+                <td>TERMINATION</td>
+                <td>4</td>
+                <td><p>Прерывание</p></td>
+              </tr>
+            
+              <tr>
+                <td>TIMED_OPERATE</td>
+                <td>5</td>
+                <td><p>Воздействие, ограниченное по времени</p></td>
+              </tr>
+            
+              <tr>
+                <td>UNDEFINED</td>
+                <td>6</td>
+                <td><p>Не определена</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="elecont.CommandState.Value">CommandState.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>REQUEST</td>
+                <td>0</td>
+                <td><p>Запрос на выполнение</p></td>
+              </tr>
+            
+              <tr>
+                <td>POSITIVE_RESPONSE</td>
+                <td>1</td>
+                <td><p>Положительная реакция</p></td>
+              </tr>
+            
+              <tr>
+                <td>NEGATIVE_RESPONSE</td>
+                <td>2</td>
+                <td><p>Отрицательная реакция</p></td>
+              </tr>
+            
+              <tr>
+                <td>COMPLETE</td>
+                <td>3</td>
+                <td><p>Выполнена</p></td>
+              </tr>
+            
+              <tr>
+                <td>TIMEOUT</td>
+                <td>4</td>
+                <td><p>Время на выполнение истекло</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="elecont.ElecontSignalType.Value">ElecontSignalType.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>BOOLEAN</td>
+                <td>0</td>
+                <td><p>Логический</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT8</td>
+                <td>1</td>
+                <td><p>Целочисленный 8 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT16</td>
+                <td>2</td>
+                <td><p>Целочисленный 16 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT32</td>
+                <td>3</td>
+                <td><p>Целочисленный 32 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT64</td>
+                <td>4</td>
+                <td><p>Целочисленный 64 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT128</td>
+                <td>5</td>
+                <td><p>Целочисленный 128 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT8U</td>
+                <td>6</td>
+                <td><p>Целочисленный беззнаковый 8 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT16U</td>
+                <td>7</td>
+                <td><p>Целочисленный беззнаковый 16 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT32U</td>
+                <td>8</td>
+                <td><p>Целочисленный беззнаковый 32 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>INT64U</td>
+                <td>9</td>
+                <td><p>Целочисленный беззнаковый 64 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>FLOAT32</td>
+                <td>10</td>
+                <td><p>Действительный (вещественный) 32 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>FLOAT64</td>
+                <td>11</td>
+                <td><p>Действительный (вещественный) 64 бит</p></td>
+              </tr>
+            
+              <tr>
+                <td>ENUMERATED</td>
+                <td>12</td>
+                <td><p>Перечисление</p></td>
+              </tr>
+            
+              <tr>
+                <td>CODED_ENUM</td>
+                <td>13</td>
+                <td><p>Кодированное перечисление. Элементы этого перечисления имеют строковое значение, которое используется в качестве кода или идентификатора</p></td>
+              </tr>
+            
+              <tr>
+                <td>OCTET_STRING_6</td>
+                <td>14</td>
+                <td><p>Строка из 6 последовательных байт (октетов)</p></td>
+              </tr>
+            
+              <tr>
+                <td>OCTET_STRING_8</td>
+                <td>15</td>
+                <td><p>Строка из 8 последовательных байт (октетов)</p></td>
+              </tr>
+            
+              <tr>
+                <td>OCTET_STRING_64</td>
+                <td>16</td>
+                <td><p>Строка 64 последовательных байт (октетов)</p></td>
+              </tr>
+            
+              <tr>
+                <td>VISIBLE_STRING_32</td>
+                <td>17</td>
+                <td><p>Строка из 32 символов</p></td>
+              </tr>
+            
+              <tr>
+                <td>VISIBLE_STRING_64</td>
+                <td>18</td>
+                <td><p>Строка из 64 символов</p></td>
+              </tr>
+            
+              <tr>
+                <td>VISIBLE_STRING_65</td>
+                <td>19</td>
+                <td><p>Строка из 65 символов</p></td>
+              </tr>
+            
+              <tr>
+                <td>VISIBLE_STRING_255</td>
+                <td>20</td>
+                <td><p>Строка из 255 символов</p></td>
+              </tr>
+            
+              <tr>
+                <td>UNICODE_STRING</td>
+                <td>21</td>
+                <td><p>Unicode строка</p></td>
+              </tr>
+            
+              <tr>
+                <td>BITFIELD_2</td>
+                <td>22</td>
+                <td><p>Битовое поле из двух элементов</p></td>
+              </tr>
+            
+              <tr>
+                <td>BITFIELD_13</td>
+                <td>23</td>
+                <td><p>Битовое поле из тринадцати элементов</p></td>
+              </tr>
+            
+              <tr>
+                <td>BITFIELD_32</td>
+                <td>24</td>
+                <td><p>Битовое поле из тридцати двух элементов</p></td>
+              </tr>
+            
+              <tr>
+                <td>UNKNOWN</td>
+                <td>25</td>
+                <td><p>Неизвестный</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="elecont.ObjectFamily.Value">ObjectFamily.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>RX_SIGNAL</td>
+                <td>0</td>
+                <td><p>Принимаемый сигнал</p></td>
+              </tr>
+            
+              <tr>
+                <td>TX_SIGNAL</td>
+                <td>1</td>
+                <td><p>Передаваемый сигнал</p></td>
+              </tr>
+            
+              <tr>
+                <td>RX_COMMAND</td>
+                <td>2</td>
+                <td><p>Принимаемая команда</p></td>
+              </tr>
+            
+              <tr>
+                <td>TX_COMMAND</td>
+                <td>3</td>
+                <td><p>Передаваемая команда</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="elecont.Result.Value">Result.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>SUCCESS</td>
+                <td>0</td>
+                <td><p>Успех</p></td>
+              </tr>
+            
+              <tr>
+                <td>FAIL</td>
+                <td>1</td>
+                <td><p>Провал</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="elecont.State.Value">State.Value</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>INIT</td>
+                <td>0</td>
+                <td><p>Инициализация</p></td>
+              </tr>
+            
+              <tr>
+                <td>READY</td>
+                <td>1</td>
+                <td><p>Готов</p></td>
+              </tr>
+            
+              <tr>
+                <td>BUSY</td>
+                <td>2</td>
+                <td><p>Занят</p></td>
+              </tr>
+            
+              <tr>
+                <td>CRITICAL_ERROR</td>
+                <td>3</td>
+                <td><p>Критическая ошибка</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+        <h3 id="elecont.Elecont">Elecont</h3>
+        <p>Сервис протокола Elecont.</p><p>Файл содержит protobuf схему данных для Эликонт-КС версий 2.X.X для обеспечения информационного обмена со сторонними программными решениями.</p><p>Дата: 25.09.2025</p><p>(C) 2025 АО "ЭЛАРА". Все права защищены.</p><p>АО "ЭЛАРА" предоставляет данный файл как открытый элемент программного продукта Эликонт-КС.</p><p>Внесение изменений в данный файл может нарушить работоспособность производного кода и связанных с ним пользовательских решений.</p><p>АО "ЭЛАРА" не несёт ответственность за программный код, созданный сторонними разработчиками для обеспечения информационного обмена с Эликонт-КС и использующий данный файл.</p><p>Лицензирование:</p><p>Откройте раздел "Лицензия" в документации к продукту для получения подробной информации.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>GetState</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.State">State</a></td>
+                <td><p>Получить состояние сервиса.</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalsById</td>
+                <td><a href="#elecont.SignalsId">SignalsId</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул сигналов по заданным идентификаторам. Если сигналов с заданными идентификаторами не окажется, то вернётся пустой пул.
+Целочисленные идентификаторы сигналов можно получить, например, вызвав GetAllSignals или GetAllObjectsData</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalsByGuid</td>
+                <td><a href="#elecont.SignalsGuid">SignalsGuid</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул сигналов по заданным GUID сигналов. Если сигналов с заданными GUID не окажется, то вернётся пустой пул.
+GUID сигналов можно получить, например, вызвав GetAllSignals или GetAllObjectsData</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalsByType</td>
+                <td><a href="#elecont.ElecontSignalType">ElecontSignalType</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул сигналов по заданному типу сигналов. Если сигналов с заданным типом не окажется, то вернётся пустой пул.
+Типы сигналов заданы в определении ElecontSignalType в соответствующем перечислении</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetCommandsById</td>
+                <td><a href="#elecont.SignalsId">SignalsId</a></td>
+                <td><a href="#elecont.CommandPool">CommandPool</a></td>
+                <td><p>Получить пул команд по заданным идентификаторам. Если команд с заданными идентификаторами не окажется, то вернётся пустой пул.
+Целочисленные идентификаторы команд можно получить, например, вызвав GetAllCommands или GetAllObjectsData</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetCommandsByGuid</td>
+                <td><a href="#elecont.SignalsGuid">SignalsGuid</a></td>
+                <td><a href="#elecont.CommandPool">CommandPool</a></td>
+                <td><p>Получить пул команд по заданным GUID команд. Если команд с заданными GUID не окажется, то вернётся пустой пул.
+GUID команд можно получить, например, вызвав GetAllCommands или GetAllObjectsData</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetCommandsByType</td>
+                <td><a href="#elecont.ElecontSignalType">ElecontSignalType</a></td>
+                <td><a href="#elecont.CommandPool">CommandPool</a></td>
+                <td><p>Получить пул команд по заданному типу команд. Если команд с заданным типом не окажется, то вернётся пустой пул.
+Типы команд заданы в определении в ElecontSignalType в соответствующем перечислении</p></td>
+              </tr>
+            
+              <tr>
+                <td>CreateEmptyReport</td>
+                <td><a href="#elecont.ReportId">ReportId</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Создать пустой отчёт (подписку) с заданным идентификатором.
+По указанному идентификатору в дальнйшем можно оперировать с отчётом. Например, получить сигналы, входящие в данный отчёт</p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteReport</td>
+                <td><a href="#elecont.ReportId">ReportId</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Удалить отчёт с заданным идентификатором</p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteAllReport</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Удалить все существующие отчёты (подписки)</p></td>
+              </tr>
+            
+              <tr>
+                <td>AddSignalToReport</td>
+                <td><a href="#elecont.Report">Report</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Добавить сигналы в отчёт (подписку).
+В запросе внутри сообщения Report, помимо идентификаторов сигналов, требуется указывать идентификатор существующего отчёта. Его нужно предварительно создать функцией CreateEmptyReport</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalsByReport</td>
+                <td><a href="#elecont.ReportId">ReportId</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул сигналов из отчёта. Если для отчёта не заданы сигналы, то вернётся пустой пул.
+В запросе требуется указать идентификатор существующего отчёта</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetChangedSignals</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул изменённых сигналов с момента предыдущего вызова данной функции. Если ни один сигнал не менял значение, то вернётся пустой пул.
+Данную функцию нельзя использовать совместно с GetAllSignals</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetChangedSignalsByReport</td>
+                <td><a href="#elecont.ReportId">ReportId</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул изменённых сигналов с момента предыдущего вызова данной функции из заданного отчёта. Если ни один сигнал не менял значение, то вернётся пустой пул.
+
+[ВНИМАНИЕ]: На текущий момент работает аналогично GetSignalsByReport. Не рекомендуется для использования сторонними приложениями на текущем этапе</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllSignals</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><p>Получить пул всех сигналов из текущей конфигурации КС. 
+Для больших конфигураций с большим количеством сигналов этот вызов может быть ресурсоёмким, поэтому его рекомендуется его использовать с осторожностью</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllCommands</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.CommandPool">CommandPool</a></td>
+                <td><p>Получить пул всех команд из текущей конфигурации КС. 
+Для больших конфигураций с большим количеством команд этот вызов может быть ресурсоёмким, поэтому его рекомендуется его использовать с осторожностью</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetSignals</td>
+                <td><a href="#elecont.SignalPool">SignalPool</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Задать значения сигналов в КС из заданного пула. Значения будут установленты только тем сигналам, идентификаторы которых существуют в текущей конфигурации КС</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalsStream</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.Signals">Signals</a> stream</td>
+                <td><p>Получить все сигналы из текущей конфигурации КС в виде потока. 
+Обратите внимание, что внутри потока передаются сообщения Signal. Это облегчённая версия представления данных по отношению к SignalPool</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetCommandsStream</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.Commands">Commands</a> stream</td>
+                <td><p>Получить все команды из текущей конфигурации КС в виде потока. 
+Обратите внимание, что внутри потока передаются сообщения Command. Это облегчённая версия представления данных по отношению к CommandPool</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllObjectsData</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><a href="#elecont.Objects">Objects</a></td>
+                <td><p>Получить данные всех объектов из текущей конфигурации КС. 
+Данный вызов имеет смысл производить только один раз, так как данные текущей конфигурации КС не изменяются до тех пор, пока её не обновять через api gateway. Например, это сделает пользователь через Конфигуратор</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetSignalByGuid</td>
+                <td><a href="#elecont.Guid">Guid</a></td>
+                <td><a href="#elecont.Signal">Signal</a></td>
+                <td><p>Получить сигнал по заданному GUID. Если сигнала с заданными GUID не окажется в текущей конфигурации КС, то вернётся сообщение Signal с данными по умолчанию.
+Является обегчённой версией функции GetSignalsByGuid. Возвращает простое по структуре сообщение Signal</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetCommandByGuid</td>
+                <td><a href="#elecont.Guid">Guid</a></td>
+                <td><a href="#elecont.Command">Command</a></td>
+                <td><p>Получить команду по заданному GUID. Если сигнала с заданными GUID не окажется в текущей конфигурации КС, то вернётся сообщение Command с данными по умолчанию.
+Является обегчённой версией функции GetCommandsByGuid. Возвращает простое по структуре сообщение Command</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetSignal</td>
+                <td><a href="#elecont.Signal">Signal</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Задать сигнал. Запрос должен содержать сообщение Signal с GUID, который существует в текущей конфигурации КС. Если сигнал с таким GUID не будет обраружен, то запрос выполнен не будет.
+Является обегчённой версией функции SetSignals. Принимает в качестве запроса простое по структуре сообщение Signal</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetCommand</td>
+                <td><a href="#elecont.Command">Command</a></td>
+                <td><a href="#elecont.Result">Result</a></td>
+                <td><p>Задать команду. Запрос должен содержать сообщение Command с GUID, который существует в текущей конфигурации КС. Если команда с таким GUID не будет обраружена, то запрос выполнен не будет</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetSignalsStream</td>
+                <td><a href="#elecont.Signals">Signals</a> stream</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><p>Задать сигналы клиентским потоком. 
+Сообщения Signal в потоке должны содержать GUID, которые существует в текущей конфигурации КС. Если GUID какого-либо сигнала не будет обраружен, то для этого GUID данные сигнала заданы не будут.
+
+[ВНИМАНИЕ]: Функция не оттестирована. Не рекомендуется для использования сторонними приложениями на текущем этапе</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetCommandsStream</td>
+                <td><a href="#elecont.Commands">Commands</a> stream</td>
+                <td><a href="#elecont.Empty">Empty</a></td>
+                <td><p>Задать команды клиентским потоком. 
+Сообщения Command в потоке должны содержать GUID, которые существует в текущей конфигурации КС. Если GUID какой-либо команды не будет обраружен, то для этого GUID данные команды заданы не будут.
+
+[ВНИМАНИЕ]: Функция на текущий не работает и находится в разработке. Рассматривается целесообразность её реализации. Не рекомендуется для использования сторонними приложениями на текущем этапе</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+            <td>float64</td>
+            <td>double</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+            <td>float32</td>
+            <td>float</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+            <td>bool</td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>TrueClass/FalseClass</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+            <td>string</td>
+            <td>string</td>
+            <td>string</td>
+            <td>String (UTF-8)</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+            <td>[]byte</td>
+            <td>ByteString</td>
+            <td>string</td>
+            <td>String (ASCII-8BIT)</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+
