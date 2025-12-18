@@ -44,10 +44,10 @@ class grpc_exchange:
     trace = False
 
     # инициализатор класса (чтение параметров работы приложения)
-    def __init__(self): 
+    def __init__(self):
         config = configparser.ConfigParser()
         config.read('settings.ini')
-        self.grpc_url = config['Default']['ELECONT_GRPC']        
+        self.grpc_url = config['Default']['USERCHANNEL']        
         self.trace = bool(int(config['Default']['TRACE']))
         self.cycle_period = float(config['Default']['CYCLE_PERIOD'])
         self.connect_period = float(config['Default']['CONNECT_PERIOD'])
@@ -56,25 +56,25 @@ class grpc_exchange:
     # метод установливает соединение gRCPC и читает данные (сигналы и команды)
     def grcp_connect(self):          
         if self.grpc_connect_status: return
-        print(f'{datetime.now().time()} grcp_connect ({self.grpc_url})...')
+        print(f'{self.get_timestring()} grcp_connect ({self.grpc_url})...')
         self.grpc_channel = grpc.insecure_channel(self.grpc_url)
         self.stub = elecont_pb2_grpc.ElecontStub(self.grpc_channel)
         
         try:
             cs_data = self.stub.GetAllObjectsData(elecont_pb2.Empty())
         except grpc.RpcError as e:
-            print(f'{datetime.now().time()} GetAllObjectsData gRPC error: {e.code()}, {e.details()}')
+            print(f'{self.get_timestring()} GetAllObjectsData gRPC error: {e.code()}, {e.details()}')
             self.grcp_close(5)
             #return []
         else:
-            if self.trace: print(f'{datetime.now().time()} gRPC connect SUCCESS')
+            if self.trace: print(f'{self.get_timestring()} gRPC connect SUCCESS')
             self.grpc_connect_status = True
             self.set_dicts(cs_data)
 
     # метод заполняет словари сигналов/команд: tag_dict, sig_values, com_dict, com_values и список тегов на чтение opc_read_tag_names
     # метод вызывается после установки соединения gRCP
     def set_dicts(self, cs_data):   
-        if self.trace: print(f'{datetime.now().time()} set_dicts...')
+        if self.trace: print(f'{self.get_timestring()} set_dicts...')
         self.sig_dict.clear()
         self.sig_values.clear()
         self.tag_dict.clear()
@@ -88,7 +88,7 @@ class grpc_exchange:
                 try:
                     self.sig_values[cs_obj.guid] = self.stub.GetSignalByGuid(elecont_pb2.Guid(guid = cs_obj.guid))
                 except grpc.RpcError as e:
-                    print(f'{datetime.now().time()} GetSignalByGuid gRPC error: {e.code()}, {e.details()}')
+                    print(f'{self.get_timestring()} GetSignalByGuid gRPC error: {e.code()}, {e.details()}')
                     self.grcp_close(5)  
                 self.tag_dict[cs_obj.userdata] = cs_obj.guid
                 self.opc_read_tag_names.append(cs_obj.userdata)   
@@ -103,26 +103,32 @@ class grpc_exchange:
     # метод преобразует текстовую метку времени сигнала в timestamp в формате КС
     def get_timestamp(self, time_string = None):  
         tz = timezone(timedelta(hours=self.time_delta))
+        # global TIME_PATTERN_1, TIME_PATTERN_2
         if time_string == None:
-            new_time = datetime.now().replace(tzinfo = tz)
+            new_time = datetime.now()
         else:
             if '.' in time_string:
                 time_pattern = TIME_PATTERN_1
             else:
                 time_pattern = TIME_PATTERN_2
             new_time = datetime.strptime(time_string, time_pattern).replace(tzinfo = tz)
-        timestamp = int(new_time.timestamp() * 1000)
-        sec = int(timestamp/1000)
-        ms = timestamp % 1000   
-        return (sec | (ms << 33))
-    
+        timestamp = round(new_time.timestamp() * 1000) 
+        return timestamp
+
+    # метод возвращает текущее время в формате строки
+    def get_timestring(self):  
+        time_string = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        return time_string
+        
     # метод записывает значения тегов в сигналы КС (SetSignal)
     def write_to_cs(self, opcda_tags):          
-        if self.trace: print(f'{datetime.now().time()} write_to_cs...')
-        global TIME_PATTERN_1, TIME_PATTERN_2
+        if self.trace: print(f'{self.get_timestring()} write_to_cs...')
         if not self.grpc_connect_status: 
             self.grcp_connect()
             return
+        
+        self.get_state()   # необходимо для поддержания соединения при редких передачах данных
+        
         if not opcda_tags:
             self.write_bad_values()
             return
@@ -131,7 +137,7 @@ class grpc_exchange:
             signal = self.sig_values[self.tag_dict[tag_name]]
             #if tag_value == None or time_string == None or tag_quality == 'Error':
             if tag_quality == 'Error':
-                if self.trace: print(f'{datetime.now().time()} Error read the tag: {tag_name}')
+                if self.trace: print(f'{self.get_timestring()} Error read the tag: {tag_name}')
                 tag_value = signal.value
 
             new_value = str(tag_value)
@@ -153,7 +159,7 @@ class grpc_exchange:
                 try:
                     self.stub.SetSignal(signal)
                 except grpc.RpcError as e:
-                    print(f'{datetime.now().time()} SetSignal gRPC error: {e.code()}, {e.details()}')
+                    print(f'{self.get_timestring()} SetSignal gRPC error: {e.code()}, {e.details()}')
                     self.grcp_close(5)
                     return
         time.sleep(self.cycle_period/1000)     # задержка перед следующим циклом
@@ -161,7 +167,7 @@ class grpc_exchange:
     # метод приcваивает сигналы с плохим значением качества (вызывается при обрыве соединение с OPC DA)
     def write_bad_values(self):
         if not self.grpc_connect_status: return
-        if self.trace: print(f'{datetime.now().time()} write_bad_values...')
+        if self.trace: print(f'{self.get_timestring()} write_bad_values...')
         
         if self.grpc_connect_status:   # приcвоить плохое значение качества
             for item in self.sig_values:
@@ -173,13 +179,21 @@ class grpc_exchange:
                     try:
                         self.stub.SetSignal(signal)
                     except grpc.RpcError as e:
-                        print(f'{datetime.now().time()} gRPC error: {e.code()}, {e.details()}')
+                        print(f'{self.get_timestring()} gRPC error: {e.code()}, {e.details()}')
                         self.grcp_close(5)   # закрыть соединение, если ошибка
                         return
-    
+
+    # метод запрашивает состояние сервиса
+    def get_state(self):
+        try:
+            self.stub.GetState(elecont_pb2.Empty())           
+        except grpc.RpcError as e:
+            print(f'{self.get_timestring()} UserChannel. GetState error: {e.code()}, {e.details()}')
+            self.uc_close(self.connect_period)
+
     # метод закрывает соединение gRCP
     def grcp_close(self, tSleep = 0):
-        print(f'{datetime.now().time()} Close gRPC connect...')
+        print(f'{self.get_timestring()} Close gRPC connect...')
         self.grpc_connect_status = False
         try:
             self.grpc_channel.close()
@@ -189,7 +203,7 @@ class grpc_exchange:
         time.sleep(tSleep)
     
     def __del__(self):
-        print(f'{datetime.now().time()} Close gRPC connect (final)...')
+        print(f'{self.get_timestring()} Close gRPC connect (final)...')
         try:
             self.grpc_channel.close()
         except:
@@ -198,13 +212,13 @@ class grpc_exchange:
     # метод читает команды КС и возращается список объектов типа (<Имя тего OPC UA>,<значение>)
     def get_commands(self): # прочитать команды
         if not self.grpc_connect_status: return
-        if self.trace: print(f'{datetime.now().time()} get_commands...')
+        if self.trace: print(f'{self.get_timestring()} get_commands...')
         command_pool = []
         command_guids = self.com_dict.keys()           
         try:
             commands = self.stub.GetCommandsByGuid(elecont_pb2.SignalsGuid(guid = command_guids))
         except grpc.RpcError as e:
-            print(f'{datetime.now().time()} get_commandsByGuid gRPC error: {e.code()}, {e.details()}')
+            print(f'{self.get_timestring()} get_commandsByGuid gRPC error: {e.code()}, {e.details()}')
             self.grcp_close(5)   # закрыть соединение, если ошибка
             return
         if not commands: return

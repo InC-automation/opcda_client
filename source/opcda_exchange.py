@@ -29,33 +29,33 @@ class opcda_exchange:
     def opcda_connect(self):  
         if self.opcda_connect_status: return
             
-        print(f'{datetime.now().time()} OPC DA connect ({self.opcda_server_name})...')
+        print(f'{self.get_timestring()} OPC DA connect ({self.opcda_server_name})...')
         try:
             self.opcda_link.connect(self.opcda_server_name)
         except Exception as e:  # Если ошибка, заркываем соединение и ждем 5 с
-            print(f'{datetime.now().time()} OPC DA connect ({self.opcda_server_name}) failed: {e}')
+            print(f'{self.get_timestring()} OPC DA connect ({self.opcda_server_name}) failed: {e}')
             self.opcda_close(5)
         else:
-            if self.trace: print(f'{datetime.now().time()} OPC DA connect SUCCESS')
+            if self.trace: print(f'{self.get_timestring()} OPC DA connect SUCCESS')
             self.opcda_connect_status = True
             time.sleep(0.2)
 
     # метод читает теги OPC DA (opcda_tag_names - список имен тегов на чтение)
     def read_tags(self, opcda_tag_names):
         if not opcda_tag_names:     # если нет тегов для чтения, закрываем соединение и выходим
-            if self.trace: print(f'{datetime.now().time()} OPC DA nothing to read...')
+            if self.trace: print(f'{self.get_timestring()} OPC DA nothing to read...')
             self.opcda_close(0.2)
             return []
         if not self.opcda_connect_status: # если нет соединения с сервером OPC DA, выходим
             self.opcda_connect()
             return []
-        if self.trace: print(f'{datetime.now().time()} OPC DA read tags...')        
+        if self.trace: print(f'{self.get_timestring()} OPC DA read tags...')        
         
         try:
             # чтение тегов
             opcda_tags = self.opcda_link.read(opcda_tag_names, sync = self.sync_mode, timeout = 1000, size = self.tags_limit)
         except Exception as e:
-            print(f'{datetime.now().time()} OPC DA Read error occurred: {e}')
+            print(f'{self.get_timestring()} OPC DA Read error occurred: {e}')
             self.opcda_close(1)
             return []
         else:
@@ -66,18 +66,23 @@ class opcda_exchange:
         if not self.opcda_connect_status: # если нет соединения с сервером OPC DA, выходим
             self.opcda_connect()
             return []        
-        if self.trace: print(f'{datetime.now().time()} OPC DA write ({len(command_pool)} values)...')
+        if self.trace: print(f'{self.get_timestring()} OPC DA write ({len(command_pool)} values)...')
         if command_pool:
             try:
                 self.opcda_link.write(command_pool)
             except Exception as e:
-                print(f'{datetime.now().time()} OPC DA Write error occurred: {e}')
+                print(f'{self.get_timestring()} OPC DA Write error occurred: {e}')
                 self.opcda_close(1)        
             time.sleep(0.2)
 
-    # метд закрывает соединение OPC DA
+    # метод возвращает текущее время в формате строки
+    def get_timestring(self):  
+        time_string = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+        return time_string
+        
+    # метoд закрывает соединение OPC DA
     def opcda_close(self, tSleep = 0):
-        print(f'{datetime.now().time()} Close OPC DA connect...')
+        print(f'{self.get_timestring()} Close OPC DA connect...')
         self.opcda_connect_status = False
         try:
             self.opcda_link.close()
@@ -87,7 +92,7 @@ class opcda_exchange:
 
     # финализация класса
     def __del__(self):  
-        print(f'{datetime.now().time()} Close OPC DA connect (final)...')
+        print(f'{self.get_timestring()} Close OPC DA connect (final)...')
         try:
             self.opcda_link.close()
         except:

@@ -60,7 +60,7 @@ pip install pywin32
 
 Параметр | Назначение
 ------------------------|------------------------
-ELECONT_GRPC = localhost:29041 | подключение к КС
+USERCHANNEL = localhost:29041 | подключение к КС
 OPCDA_SERVER = Matrikon.OPC.Simulation.1 | имя сервера OPC DA
 CYCLE_PERIOD = 1000 | период цикла обмена данными (мс)
 CONNECT_PERIOD = 5000 | период подключения к серверам КС и OPC DA (мс)
