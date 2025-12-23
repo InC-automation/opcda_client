@@ -1,6 +1,5 @@
 import grpc
-import elecont_pb2
-import elecont_pb2_grpc
+import elecont_pb2, import elecont_pb2_grpc
 from datetime import datetime, timezone, timedelta
 import time
 import configparser
@@ -35,8 +34,8 @@ class grpc_exchange:
     tag_dict = {}        # Словарь {userdata:guid} (for RX_SIGNAL)
     opc_read_tag_names = []
     grpc_connect_status = False
-    grpc_channel = grpc.insecure_channel('localhost:29040')
-    stub = elecont_pb2_grpc.ElecontStub(grpc_channel)
+    grpc_channel = None
+    stub = None
     grpc_url = ''
     cycle_period = 10
     connect_period = 30
