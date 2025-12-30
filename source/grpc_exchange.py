@@ -1,5 +1,5 @@
 import grpc
-import elecont_pb2, import elecont_pb2_grpc
+import elecont_pb2, elecont_pb2_grpc
 from datetime import datetime, timezone, timedelta
 import time
 import configparser
