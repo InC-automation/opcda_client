@@ -27,18 +27,19 @@ TIME_PATTERN_1 = '%Y-%m-%d %H:%M:%S.%f%z'       #2025-08-13 13:14:16.691000+00:0
 TIME_PATTERN_2 = '%Y-%m-%d %H:%M:%S%z'          #2025-08-21 12:06:04+00:00
 
 class grpc_exchange:
-    sig_dict = {}        # Словарь {guid:userdata} (for RX_SIGNAL)
-    sig_values = {}      # Словарь {guid:signal}   (for RX_SIGNAL)
-    com_dict = {}        # Словарь {guid:userdata} (for TX_COMMAND)
-    com_values = {}      # Словарь {guid:comvalue} (for TX_COMMAND)
-    tag_dict = {}        # Словарь {userdata:guid} (for RX_SIGNAL)
+    guid_userdata = {}      # Словарь {guid:userdata} (for RX_SIGNAL)
+    guid_signal = {}        # Словарь {guid:signal}   (for RX_SIGNAL)
+    guid_type = {}          # Словарь {guid:type}     (for RX_SIGNAL)
+    com_values = {}         # Словарь {guid:comvalue} (for TX_COMMAND)
+    userdata_guid = {}      # Словарь {userdata:guid} (for RX_SIGNAL)
     opc_read_tag_names = []
     grpc_connect_status = False
     grpc_channel = None
     stub = None
+    set_signal_pool = None
     grpc_url = ''
-    cycle_period = 10
-    connect_period = 30
+    cycle_period = 1000
+    connect_period = 5000
     time_delta = 0    
     trace = False
 
@@ -51,6 +52,7 @@ class grpc_exchange:
         self.cycle_period = float(config['Default']['CYCLE_PERIOD'])
         self.connect_period = float(config['Default']['CONNECT_PERIOD'])
         self.time_delta = int(config['Default']['TIME_DELTA'])
+        
     
     # метод установливает соединение gRCPC и читает данные (сигналы и команды)
     def grcp_connect(self):          
@@ -61,40 +63,77 @@ class grpc_exchange:
         
         try:
             cs_data = self.stub.GetAllObjectsData(elecont_pb2.Empty())
+            signal_pool = self.stub.GetAllSignals(elecont_pb2.Empty())
         except grpc.RpcError as e:
             print(f'{self.get_timestring()} GetAllObjectsData gRPC error: {e.code()}, {e.details()}')
-            self.grcp_close(5)
+            self.grcp_close(self.connect_period)
             #return []
         else:
             if self.trace: print(f'{self.get_timestring()} gRPC connect SUCCESS')
             self.grpc_connect_status = True
-            self.set_dicts(cs_data)
+            self.fill_dicts(cs_data)
+            self.fill_pool(signal_pool)
 
-    # метод заполняет словари сигналов/команд: tag_dict, sig_values, com_dict, com_values и список тегов на чтение opc_read_tag_names
+    # метод заполняет словари сигналов/команд: userdata_guid, guid_signal, guid_userdata, com_values и список тегов на чтение opc_read_tag_names
     # метод вызывается после установки соединения gRCP
-    def set_dicts(self, cs_data):   
-        if self.trace: print(f'{self.get_timestring()} set_dicts...')
-        self.sig_dict.clear()
-        self.sig_values.clear()
-        self.tag_dict.clear()
+    def fill_dicts(self, cs_data):   
+        if self.trace: print(f'{self.get_timestring()} fill_dicts...')
+        self.guid_userdata.clear()
+        self.userdata_guid.clear()
         self.opc_read_tag_names.clear()
-        self.com_dict.clear()
         self.com_values.clear()
         
         for cs_obj in cs_data.data:
             if elecont_pb2.ObjectFamily.Value.Name(cs_obj.family.value) == 'RX_SIGNAL':
-                self.sig_dict[cs_obj.guid] = cs_obj.userdata
-                try:
-                    self.sig_values[cs_obj.guid] = self.stub.GetSignalByGuid(elecont_pb2.Guid(guid = cs_obj.guid))
-                except grpc.RpcError as e:
-                    print(f'{self.get_timestring()} GetSignalByGuid gRPC error: {e.code()}, {e.details()}')
-                    self.grcp_close(5)  
-                self.tag_dict[cs_obj.userdata] = cs_obj.guid
+                self.guid_userdata[cs_obj.guid] = cs_obj.userdata
+                self.userdata_guid[cs_obj.userdata] = cs_obj.guid
                 self.opc_read_tag_names.append(cs_obj.userdata)   
                 #print(f'Tag: {cs_obj.guid} {cs_obj.userdata}')
             if elecont_pb2.ObjectFamily.Value.Name(cs_obj.family.value) == 'TX_COMMAND':
-                self.com_dict[cs_obj.guid] = cs_obj.userdata
+                self.guid_userdata[cs_obj.guid] = cs_obj.userdata
                 self.com_values[cs_obj.guid] = ''
+
+    def fill_pool(self, signal_pool):
+        if self.trace: print(f'{self.get_timestring()} set_pool...')
+        self.guid_signal.clear()
+        self.guid_type.clear()
+        
+        for cs_sig in signal_pool.boolean_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'boolean_signal'
+        for cs_sig in signal_pool.int8_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int8_signal'
+        for cs_sig in signal_pool.int16_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int16_signal'
+        for cs_sig in signal_pool.int32_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int32_signal'
+        for cs_sig in signal_pool.int64_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int64_signal'
+        for cs_sig in signal_pool.int8u_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int8u_signal'
+        for cs_sig in signal_pool.int16u_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int16u_signal'
+        for cs_sig in signal_pool.int32u_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int32u_signal'
+        for cs_sig in signal_pool.int64u_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'int64u_signal'
+        for cs_sig in signal_pool.float32_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'float32_signal'
+        for cs_sig in signal_pool.float64_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'float64_signal'
+        for cs_sig in signal_pool.visible_string255_signal:
+            self.guid_signal[cs_sig.sigprop.guid] = cs_sig
+            self.guid_type[cs_sig.sigprop.guid] = 'visible_string255_signal'
 
     def get_tag_names(self):
         return self.opc_read_tag_names
@@ -122,73 +161,131 @@ class grpc_exchange:
     # метод записывает значения тегов в сигналы КС (SetSignal)
     def write_to_cs(self, opcda_tags):          
         if self.trace: print(f'{self.get_timestring()} write_to_cs...')
-        if not self.grpc_connect_status: 
+        if not self.grpc_connect_status:
             self.grcp_connect()
             return
         
         self.get_state()   # необходимо для поддержания соединения при редких передачах данных
         
-        if not opcda_tags:
+        self.set_signal_pool = elecont_pb2.SignalPool()
+        if opcda_tags:
+            self.write_good_values(opcda_tags)
+        else:
             self.write_bad_values()
-            return
-        
+
+    # метод записывает "хорошие" значения тегов в сигналы КС (SetSignals)
+    def write_good_values(self, opcda_tags):
+        # if self.trace: print(f'{self.get_timestring()} write_good_values...')
+        if not self.grpc_connect_status: return
+        num_signals = 0
         for tag_name, tag_value, tag_quality, time_string in opcda_tags:
-            signal = self.sig_values[self.tag_dict[tag_name]]
+            signal_guid = self.userdata_guid[tag_name]
+            signal = self.guid_signal[signal_guid]
             #if tag_value == None or time_string == None or tag_quality == 'Error':
             if tag_quality == 'Error':
                 if self.trace: print(f'{self.get_timestring()} Error read the tag: {tag_name}')
                 tag_value = signal.value
 
-            new_value = str(tag_value)
-            if signal.type.value == elecont_pb2.ElecontSignalType.BOOLEAN:
-                if new_value.lower() == 'true':
-                    new_value = '1'
-                else:
-                    new_value = '0'            
-           
+            new_value = self.type_correct(self.guid_type[signal_guid], tag_value)
+        
             new_quality = quality_dict[tag_quality.upper()]
-            new_timestamp = self.get_timestamp(time_string)
+            new_timestamp = self.get_timestamp(time_string)            
             
-            # записать сигнал в КС, если изменилось значение или качество
-            if signal.value != new_value or signal.quality != new_quality:    
+            # записать сигнал в пул, если изменилось значение или качество
+            if signal.value != new_value or signal.sigprop.quality != new_quality:    
                 signal.value = new_value
-                signal.quality = new_quality
-                signal.time = new_timestamp
-                self.sig_values[signal.guid] = signal
-                try:
-                    self.stub.SetSignal(signal)
-                except grpc.RpcError as e:
-                    print(f'{self.get_timestring()} SetSignal gRPC error: {e.code()}, {e.details()}')
-                    self.grcp_close(5)
-                    return
+                signal.sigprop.quality = new_quality
+                signal.sigprop.time = new_timestamp
+                self.guid_signal[signal_guid] = signal
+                self.append_to_pool(signal)
+                num_signals = num_signals + 1
+                # print(f'{tag_name} {signal.value} {signal.sigprop.quality} {signal.sigprop.raw_quality}')
+
+        if num_signals > 0:
+            try:
+                self.stub.SetSignals(self.set_signal_pool)                
+            except grpc.RpcError as e:
+                print(f'{self.get_timestring()} SetSignals gRPC error: {e.code()}, {e.details()}')
+                self.grcp_close(self.connect_period)   # закрыть соединение, если ошибка
+                return
+        if self.trace: print(f'{self.get_timestring()} write_good_values: {num_signals}')
+        
         time.sleep(self.cycle_period/1000)     # задержка перед следующим циклом
         
-    # метод приcваивает сигналы с плохим значением качества (вызывается при обрыве соединение с OPC DA)
+    # метод записывает сигналы с плохим значением качества (вызывается при обрыве соединение с OPC DA)
     def write_bad_values(self):
+        # if self.trace: print(f'{self.get_timestring()} write_bad_values...')
         if not self.grpc_connect_status: return
-        if self.trace: print(f'{self.get_timestring()} write_bad_values...')
-        
-        if self.grpc_connect_status:   # приcвоить плохое значение качества
-            for item in self.sig_values:
-                signal = self.sig_values[item]
-                if signal.quality != quality_dict['DEVICE_FAILURE']:
-                    signal.quality = quality_dict['DEVICE_FAILURE']
-                    signal.time = self.get_timestamp()
-                    self.sig_values[signal.guid] = signal
-                    try:
-                        self.stub.SetSignal(signal)
-                    except grpc.RpcError as e:
-                        print(f'{self.get_timestring()} gRPC error: {e.code()}, {e.details()}')
-                        self.grcp_close(5)   # закрыть соединение, если ошибка
-                        return
+        num_signals = 0
+        timestamp = self.get_timestamp()
+        for item in self.guid_signal:
+            signal = self.guid_signal[item]
+            if signal.sigprop.quality != quality_dict['DEVICE_FAILURE']:
+                signal.sigprop.quality = quality_dict['DEVICE_FAILURE']
+                signal.sigprop.time = timestamp
+                self.guid_signal[signal.sigprop.guid] = signal
+                self.append_to_pool(signal)
+                num_signals = num_signals + 1
+        if num_signals > 0:
+            try:
+                self.stub.SetSignals(self.set_signal_pool)
+            except grpc.RpcError as e:
+                print(f'{self.get_timestring()} SetSignals gRPC error: {e.code()}, {e.details()}')
+                self.grcp_close(self.connect_period)   # закрыть соединение, если ошибка
+                return
+        if self.trace: print(f'{self.get_timestring()} write_bad_values: {num_signals}')    
+        time.sleep(self.cycle_period/1000)     # задержка перед следующим циклом            
+
+    def type_correct(self, signal_type, value):
+        correct_value = None
+        if signal_type in ('int8_signal', 'int16_signal', 'int32_signal', 'int64_signal', 'int8u_signal', 'int16u_signal', 'int32u_signal', 'int64u_signal'):
+            correct_value = int(value)
+        elif signal_type in ('float32_signal', 'float64_signal'):
+            correct_value = float(value)
+        elif signal_type in ('visible_string255_signal'):
+            correct_value = str(value)
+        elif signal_type in ('boolean_signal'):
+            correct_value = bool(value)
+        return correct_value
+
+    def append_to_pool(self, signal):
+        signal_guid = signal.sigprop.guid
+        signal_type = self.guid_type[signal_guid]
+
+        if signal_type == 'boolean_signal':
+            self.set_signal_pool.boolean_signal.append(signal)
+        if signal_type == 'int8_signal':
+            self.set_signal_pool.int8_signal.append(signal)
+        if signal_type == 'int16_signal':
+            self.set_signal_pool.int16_signal.append(signal)
+        if signal_type == 'int32_signal':
+            self.set_signal_pool.int32_signal.append(signal)
+        if signal_type == 'int64_signal':
+            self.set_signal_pool.int64_signal.append(signal)
+        if signal_type == 'int8u_signal':
+            self.set_signal_pool.int8u_signal.append(signal)
+        if signal_type == 'int16u_signal':
+            self.set_signal_pool.int16u_signal.append(signal)
+        if signal_type == 'int32u_signal':
+            self.set_signal_pool.int32u_signal.append(signal)
+        if signal_type == 'int64u_signal':
+            self.set_signal_pool.int64u_signal.append(signal)
+        if signal_type == 'float32_signal':
+            self.set_signal_pool.float32_signal.append(signal)
+        if signal_type == 'float64_signal':
+            self.set_signal_pool.float64_signal.append(signal)
+        if signal_type == 'visible_string255_signal':
+            self.set_signal_pool.visible_string255_signal.append(signal)
 
     # метод запрашивает состояние сервиса
     def get_state(self):
+        if not self.grpc_connect_status: return
         try:
-            self.stub.GetState(elecont_pb2.Empty())           
+            self.stub.GetState(elecont_pb2.Empty())
         except grpc.RpcError as e:
             print(f'{self.get_timestring()} UserChannel. GetState error: {e.code()}, {e.details()}')
-            self.uc_close(self.connect_period)
+            self.grcp_close(self.connect_period)
+            return
 
     # метод закрывает соединение gRCP
     def grcp_close(self, tSleep = 0):
@@ -199,7 +296,7 @@ class grpc_exchange:
         except:
             pass
         self.opc_read_tag_names.clear()
-        time.sleep(tSleep)
+        time.sleep(tSleep/1000)
     
     def __del__(self):
         print(f'{self.get_timestring()} Close gRPC connect (final)...')
@@ -213,12 +310,13 @@ class grpc_exchange:
         if not self.grpc_connect_status: return
         if self.trace: print(f'{self.get_timestring()} get_commands...')
         command_pool = []
-        command_guids = self.com_dict.keys()           
+        command_guids = self.guid_userdata.keys()           
         try:
-            commands = self.stub.GetCommandsByGuid(elecont_pb2.SignalsGuid(guid = command_guids))
+            commands = self.stub.GetAllCommands(elecont_pb2.Empty())
+            # commands = self.stub.GetCommandsByGuid(elecont_pb2.SignalsGuid(guid = command_guids))
         except grpc.RpcError as e:
-            print(f'{self.get_timestring()} get_commandsByGuid gRPC error: {e.code()}, {e.details()}')
-            self.grcp_close(5)   # закрыть соединение, если ошибка
+            print(f'{self.get_timestring()} GetAllCommands gRPC error: {e.code()}, {e.details()}')
+            self.grcp_close(self.connect_period)   # закрыть соединение, если ошибка
             return
         if not commands: return
       
@@ -266,7 +364,7 @@ class grpc_exchange:
         current_command_value = self.com_values[command_guid]
         if command.value != current_command_value:
             self.com_values[command_guid] = command.value
-            tag_name = self.com_dict[command_guid]
+            tag_name = self.guid_userdata[command_guid]
             if 'int' in data_type.lower(): tag_value = int(command.value)
             elif 'float' in data_type.lower(): tag_value = float(command.value)
             elif 'bool' in data_type.lower(): tag_value = bool(command.value)

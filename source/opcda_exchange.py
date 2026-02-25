@@ -8,7 +8,7 @@ import time
 import configparser
 
 # класс для работы с OPC DA
-class opcda_exchange:    
+class opcda_exchange:
     opcda_connect_status = False
     opcda_link = OpenOPC.client()  # локальный клиент
     opcda_server_name = ''
@@ -44,7 +44,7 @@ class opcda_exchange:
     def read_tags(self, opcda_tag_names):
         if not opcda_tag_names:     # если нет тегов для чтения, закрываем соединение и выходим
             if self.trace: print(f'{self.get_timestring()} OPC DA nothing to read...')
-            self.opcda_close(0.2)
+            # self.opcda_close(0.2)
             return []
         if not self.opcda_connect_status: # если нет соединения с сервером OPC DA, выходим
             self.opcda_connect()
@@ -66,10 +66,11 @@ class opcda_exchange:
         if not self.opcda_connect_status: # если нет соединения с сервером OPC DA, выходим
             self.opcda_connect()
             return []        
-        if self.trace: print(f'{self.get_timestring()} OPC DA write ({len(command_pool)} values)...')
         if command_pool:
+            if self.trace: print(f'{self.get_timestring()} OPC DA write: {len(command_pool)}')
             try:
                 self.opcda_link.write(command_pool)
+                print(command_pool)
             except Exception as e:
                 print(f'{self.get_timestring()} OPC DA Write error occurred: {e}')
                 self.opcda_close(1)        
