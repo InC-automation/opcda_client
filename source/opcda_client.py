@@ -9,6 +9,7 @@ opcda_exchange = opcda_exchange()
 grpc_exchange = grpc_exchange()
 
 run = True
+
 try:
     while run:
         tag_names = grpc_exchange.get_tag_names()

@@ -160,14 +160,13 @@ class grpc_exchange:
         
     # метод записывает значения тегов в сигналы КС (SetSignal)
     def write_to_cs(self, opcda_tags):          
-        if self.trace: print(f'{self.get_timestring()} write_to_cs...')
+        # if self.trace: print(f'{self.get_timestring()} write_to_cs...')
         if not self.grpc_connect_status:
             self.grcp_connect()
             return
         
-        self.get_state()   # необходимо для поддержания соединения при редких передачах данных
-        
         self.set_signal_pool = elecont_pb2.SignalPool()
+        
         if opcda_tags:
             self.write_good_values(opcda_tags)
         else:
@@ -183,11 +182,10 @@ class grpc_exchange:
             signal = self.guid_signal[signal_guid]
             #if tag_value == None or time_string == None or tag_quality == 'Error':
             if tag_quality == 'Error':
-                if self.trace: print(f'{self.get_timestring()} Error read the tag: {tag_name}')
+                if self.trace: print(f'{self.get_timestring()} OPC DA: error read the tag: {tag_name}')
                 tag_value = signal.value
 
             new_value = self.type_correct(self.guid_type[signal_guid], tag_value)
-        
             new_quality = quality_dict[tag_quality.upper()]
             new_timestamp = self.get_timestamp(time_string)            
             
@@ -208,7 +206,10 @@ class grpc_exchange:
                 print(f'{self.get_timestring()} SetSignals gRPC error: {e.code()}, {e.details()}')
                 self.grcp_close(self.connect_period)   # закрыть соединение, если ошибка
                 return
-        if self.trace: print(f'{self.get_timestring()} write_good_values: {num_signals}')
+        else:
+            self.get_state()   # необходимо для поддержания соединения при редких передачах данных
+            
+        if self.trace: print(f'{self.get_timestring()} CS: write good values: {num_signals}')
         
         time.sleep(self.cycle_period/1000)     # задержка перед следующим циклом
         
@@ -233,7 +234,10 @@ class grpc_exchange:
                 print(f'{self.get_timestring()} SetSignals gRPC error: {e.code()}, {e.details()}')
                 self.grcp_close(self.connect_period)   # закрыть соединение, если ошибка
                 return
-        if self.trace: print(f'{self.get_timestring()} write_bad_values: {num_signals}')    
+        else:
+            self.get_state()   # необходимо для поддержания соединения при редких передачах данных
+            
+        if self.trace: print(f'{self.get_timestring()} CS: write bad values: {num_signals}')    
         time.sleep(self.cycle_period/1000)     # задержка перед следующим циклом            
 
     def type_correct(self, signal_type, value):
